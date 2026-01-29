@@ -114,7 +114,7 @@ module.exports = db;
 ```
 ### Initilize the database 
 ```
-mysql -h <rdsendpoint> -u admin -p<rdspassword> < db.sql
+mysql -h <rds-endpoint> -u admin -p<rdspassword> < db.sql
 
 
 ```
