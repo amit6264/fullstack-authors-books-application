@@ -11,7 +11,7 @@ jobs:
 
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }} # example: 066380524960.dkr.ecr.eu-north-1.amazonaws.com
+      ECR_REGISTRY: 066380524960.dkr.ecr.eu-north-1.amazonaws.com/fullstack-repo
       ECR_REPO: fullstack-repo
 
     steps:
@@ -48,8 +48,7 @@ jobs:
 
     - name: Push Backend Image
       run: |
-        docker push $ECR_REGISTRY/$ECR_REPO:backend
-
+        docker push 066380524960.dkr.ecr.eu-north-1.amazonaws.com/fullstack-repo
     # -----------------------------
     # Build Frontend Image
     # -----------------------------
@@ -67,4 +66,4 @@ jobs:
 
     - name: Push Frontend Image
       run: |
-        docker push $ECR_REGISTRY/$ECR_REPO:frontend
+        docker push 066380524960.dkr.ecr.eu-north-1.amazonaws.com/fullstack-repo
