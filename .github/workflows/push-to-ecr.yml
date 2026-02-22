@@ -1,0 +1,65 @@
+name: Push Backend & Frontend Images to ECR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # -----------------------------
+    # Configure AWS Credentials
+    # -----------------------------
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    # -----------------------------
+    # Login to ECR
+    # -----------------------------
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    # -----------------------------
+    # Build Backend Image
+    # -----------------------------
+    - name: Build Backend Docker image
+      run: |
+        docker build -t myapp-backend ./backend
+
+    - name: Tag Backend Image
+      run: |
+        docker tag myapp-backend:latest ${{ secrets.ECR_REGISTRY }}/myapp:backend
+
+    - name: Push Backend Image
+      run: |
+        docker push ${{ secrets.ECR_REGISTRY }}/myapp:backend
+
+    # -----------------------------
+    # Build Frontend Image
+    # -----------------------------
+    - name: Build Frontend Docker image
+      run: |
+        cd frontend
+        npm install
+        npm run build
+        cd ..
+        docker build -t myapp-frontend ./frontend
+
+    - name: Tag Frontend Image
+      run: |
+        docker tag myapp-frontend:latest ${{ secrets.ECR_REGISTRY }}/myapp:frontend
+
+    - name: Push Frontend Image
+      run: |
+        docker push ${{ secrets.ECR_REGISTRY }}/myapp:frontend
